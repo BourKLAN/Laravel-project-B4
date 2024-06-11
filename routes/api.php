@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FriendController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
@@ -34,6 +35,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/post/delete/{id}',[PostController::class, 'destroy']);
     // like
     Route::post('/like/toggleLike',[LikeController::class, 'toggleLike']);
+    // friends request
+    Route::post('/friend/addfriend',[FriendController::class, 'addfriend']);
 
 });
 
