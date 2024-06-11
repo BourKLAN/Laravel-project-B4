@@ -7,6 +7,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LikeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,6 +40,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/post/delete/{id}',[PostController::class, 'destroy']);
     Route::post('/post/update/{id}',[PostController::class, 'update']);
 
+    //Like===============================================
+    Route::post('/like/toggleLike',[LikeController::class, 'toggleLike']);
+    
+    //Media================================================
     // Route::post('/photos/create', [MediaController::class, 'store']);
 
     //Comment==============================================

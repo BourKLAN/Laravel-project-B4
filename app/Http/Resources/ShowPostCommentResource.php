@@ -20,6 +20,8 @@ class ShowPostCommentResource extends JsonResource
             'content' => $this->content,
             'comment' => ShowCommentResource::collection($this->comments),
             'total_comments' => $this->comments->count(),
+            'userLikes' => ShowLikeResource::collection($this->likes),
+            'total_likes' => $this->likes->count(),
 
         ];
     }
