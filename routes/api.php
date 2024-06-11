@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\MedaiController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ImageController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -26,13 +29,45 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/me', [AuthController::class, 'index']);
     Route::put('/updateProfilePicture', [UserController::class, 'updateProfilePicture']);
+    Route::put('/updateProfile', [UserController::class, 'updateProfile']);
+
     //Post=================================================
     Route::get('/post/list',[PostController::class, 'index']);
     Route::post('/post/create',[PostController::class, 'store']);
     Route::get('/post/show/{id}',[PostController::class, 'show']);
     Route::delete('/post/delete/{id}',[PostController::class, 'destroy']);
+    Route::post('/post/update/{id}',[PostController::class, 'update']);
+
+    // Route::post('/photos/create', [MediaController::class, 'store']);
 
 });
+
+
+Route::post('/photos/create', [MedaiController::class, 'store']);
+Route::get('/photos/list', [MedaiController::class, 'index']);
+
+
+// Route::prefix('api')->group(function () {
+//     Route::post('/register', [AuthController::class, 'register']);
+//     Route::post('/login', [AuthController::class, 'login']);
+//     Route::post('/logout', [AuthController::class, 'logout']);
+//     Route::post('password/email', [AuthController::class, 'sendResetLinkEmail']);
+//     Route::post('password/reset', [AuthController::class, 'reset']);
+
+//     Route::middleware('auth:sanctum')->group(function () {
+//         Route::get('/me', [AuthController::class, 'index']);
+//         Route::post('/updateProfilePicture', [UserController::class, 'updateProfilePicture']);
+
+//         //Post routes prefixed with /post
+//         Route::prefix('post')->group(function () {
+//             Route::get('/list', [PostController::class, 'index']);
+//             Route::post('/create', [PostController::class, 'store']);
+//             Route::get('/show/{id}', [PostController::class, 'show']);
+//             Route::delete('/delete/{id}', [PostController::class, 'destroy']);
+//             Route::post('/update/{id}', [PostController::class, 'update']);
+//         });
+//     });
+// });
 
 
 

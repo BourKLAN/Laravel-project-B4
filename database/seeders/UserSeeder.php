@@ -41,3 +41,4 @@ class UserSeeder extends Seeder
         $user->syncPermissions(["view_users","view_roles", "view_permissions"]);
     }
 }
+

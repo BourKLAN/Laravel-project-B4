@@ -3,7 +3,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -20,9 +19,12 @@ class PostController extends Controller
         $post->user_id = $request->user()->id;
         $post->title = $request->title;
         $post->content = $request->content;
+        if($request->has('media_id')) {
+            $post->media_id = $request->media_id;
+        }
         $post->save();
-
-        return response()->json($post, 201);
+        
+        return response()->json(['success' => true, 'data' => $post], 200);
     }
 
     public function show($id)
@@ -35,7 +37,7 @@ class PostController extends Controller
             ], 404);
         }
     
-        return response()->json($post);
+        return response()->json(['success' => true, 'data' => $post], 200);
     }
     
 
@@ -43,17 +45,21 @@ class PostController extends Controller
     {
 
         $post = Post::find($id);
+        
         if(!$post){
             return response()->json([
                'message' => 'Post not found'
             ], 404);
         }
-        $post->title = $request->title;
-        $post->content = $request->content;
-
+        if($request->has('title')) {
+            $post->title = $request->title;
+        }
+    
+        if($request->has('content')) {
+            $post->content = $request->content;
+        }
         $post->save();
-
-        return response()->json($post);
+        return response()->json(['success' => true, 'data' => $post], 200);
     }
 
     public function destroy($id)
@@ -65,13 +71,7 @@ class PostController extends Controller
                'message' => 'Post not found'
             ], 404);
         }
-        // Delete the image
-        if ($post->img) {
-            Storage::disk('public')->delete($post->img);
-        }
-
         $post->delete();
-
-        return response()->json(['message' => 'Post deleted successfully']);
+        return response()->json(['message' => 'Post deleted successfully 1']);
     }
 }
