@@ -20,12 +20,6 @@ class PostController extends Controller
         $post->user_id = $request->user()->id;
         $post->title = $request->title;
         $post->content = $request->content;
-
-        if ($request->hasFile('img')) {
-            $path = $request->file('img')->store('images', 'public');
-            $post->img = $path;
-        }
-
         $post->save();
 
         return response()->json($post, 201);
@@ -56,16 +50,6 @@ class PostController extends Controller
         }
         $post->title = $request->title;
         $post->content = $request->content;
-
-        if ($request->hasFile('img')) {
-            // Delete the old image
-            if ($post->img) {
-                Storage::disk('public')->delete($post->img);
-            }
-
-            $path = $request->file('img')->store('images', 'public');
-            $post->img = $path;
-        }
 
         $post->save();
 
