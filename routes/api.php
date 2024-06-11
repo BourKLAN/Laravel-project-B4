@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,8 +19,21 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
-// Route::post('/resetPassword', [AuthController::class, 'resetPassword']);
 Route::post('password/email', [AuthController::class, 'sendResetLinkEmail']);
 Route::post('password/reset', [AuthController::class, 'reset']);
-// Route::post('password/reset', 'App\Http\Controllers\Auth\ResetPasswordController@reset')->name('password.update');
-Route::get('/me', [AuthController::class, 'index'])->middleware('auth:sanctum');
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::get('/me', [AuthController::class, 'index']);
+    Route::put('/updateProfilePicture', [UserController::class, 'updateProfilePicture']);
+    //Post=================================================
+    Route::get('/post/list',[PostController::class, 'index']);
+    Route::post('/post/create',[PostController::class, 'store']);
+    Route::get('/post/show/{id}',[PostController::class, 'show']);
+    Route::delete('/post/delete/{id}',[PostController::class, 'destroy']);
+
+});
+
+
+
+

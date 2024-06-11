@@ -1,65 +1,93 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $posts = Post::with('user')->get();
+        return response()->json($posts);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $post = new Post();
+        $post->user_id = $request->user()->id;
+        $post->title = $request->title;
+        $post->content = $request->content;
+
+        if ($request->hasFile('img')) {
+            $path = $request->file('img')->store('images', 'public');
+            $post->img = $path;
+        }
+
+        $post->save();
+
+        return response()->json($post, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Post $post)
+    public function show($id)
     {
-        //
+        $post = Post::with('user')->find($id);
+    
+        if (!$post) {
+            return response()->json([
+               'message' => 'Post not found'
+            ], 404);
+        }
+    
+        return response()->json($post);
+    }
+    
+
+    public function update(Request $request, $id)
+    {
+
+        $post = Post::find($id);
+        if(!$post){
+            return response()->json([
+               'message' => 'Post not found'
+            ], 404);
+        }
+        $post->title = $request->title;
+        $post->content = $request->content;
+
+        if ($request->hasFile('img')) {
+            // Delete the old image
+            if ($post->img) {
+                Storage::disk('public')->delete($post->img);
+            }
+
+            $path = $request->file('img')->store('images', 'public');
+            $post->img = $path;
+        }
+
+        $post->save();
+
+        return response()->json($post);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $post)
+    public function destroy($id)
     {
-        //
-    }
+        
+        $post = Post::find($id);
+        if(!$post){
+            return response()->json([
+               'message' => 'Post not found'
+            ], 404);
+        }
+        // Delete the image
+        if ($post->img) {
+            Storage::disk('public')->delete($post->img);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Post $post)
-    {
-        //
-    }
+        $post->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Post $post)
-    {
-        //
+        return response()->json(['message' => 'Post deleted successfully']);
     }
 }
