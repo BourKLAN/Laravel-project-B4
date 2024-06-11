@@ -15,6 +15,6 @@ class MedaiController extends Controller
     public function store(Request $request)
     {
         $photo=Media::store($request);
-        return ["success" => true,"data"=>$photo, "Message" =>" created successfully"];
+        return ["success" => true, "Message" =>" created successfully"];
     }
 }

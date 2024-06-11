@@ -35,7 +35,7 @@ class UserController extends Controller
         $user->media_id = $validatedData['media_id'];
         $user->save();
         $user=new ImageResource($user);
-        return response()->json(['success' => true, 'data' => $user], 200);
+        return response()->json(['success' => true,'message'=>'Update Profile Picture Successfully!'], 200);
     }
 
     public function updateProfile(Request $request){
@@ -48,7 +48,7 @@ class UserController extends Controller
             $user->email=$request->email;
         }
         $user->save();
-        return response()->json(['success' => true, 'data' =>$user],200);
+        return response()->json(['success' => true, 'message'=>"Update User Successfully"],200);
     }
     
     

@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ShowPostCommentResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -24,19 +25,19 @@ class PostController extends Controller
         }
         $post->save();
         
-        return response()->json(['success' => true, 'data' => $post], 200);
+        return response()->json(['success' => true, 'message'=>'Create successfully!'], 200);
     }
 
     public function show($id)
     {
         $post = Post::with('user')->find($id);
-    
+        
         if (!$post) {
             return response()->json([
                'message' => 'Post not found'
             ], 404);
         }
-    
+        $post=new ShowPostCommentResource($post);
         return response()->json(['success' => true, 'data' => $post], 200);
     }
     
@@ -59,7 +60,7 @@ class PostController extends Controller
             $post->content = $request->content;
         }
         $post->save();
-        return response()->json(['success' => true, 'data' => $post], 200);
+        return response()->json(['success' => true, 'message'=>'update successfully '], 200);
     }
 
     public function destroy($id)
