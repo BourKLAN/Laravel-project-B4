@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/post/create',[PostController::class, 'store']);
     Route::get('/post/show/{id}',[PostController::class, 'show']);
     Route::delete('/post/delete/{id}',[PostController::class, 'destroy']);
+    // like
+    Route::post('/like/toggleLike',[LikeController::class, 'toggleLike']);
 
 });
 
