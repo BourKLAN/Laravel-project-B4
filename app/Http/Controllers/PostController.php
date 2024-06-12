@@ -2,7 +2,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ShowPostCommentResource;
+use App\Models\Media;
 use App\Models\Post;
+use Dotenv\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -21,12 +23,13 @@ class PostController extends Controller
     
 
     public function store(Request $request)
-    {
+    {   
+       
         $post = new Post();
         $post->user_id = $request->user()->id;
         $post->title = $request->title;
         $post->content = $request->content;
-        if($request->has('media_id')) {
+        if ($request->has('media_id') && $request->media_id !== null) {
             $post->media_id = $request->media_id;
         }
         $post->save();
