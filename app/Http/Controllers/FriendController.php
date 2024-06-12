@@ -25,4 +25,24 @@ class FriendController extends Controller
 
         return response()->json(['message' => 'Friend added successfully.'], 201);
     }
+
+    public function acceptFriend(Request $request, $id)
+    {
+        $friend = Friend::where('id', $id)
+            ->where('recipients_id', $request->user()->id)
+            ->first();
+
+        if (!$friend) {
+            return response()->json(['message' => 'Friend request not found.'], 404);
+        }
+
+        if ($friend->status === 'pending') {
+            $friend->status = 'accepted';
+            $friend->save();
+            return response()->json(['message' => 'Friend request accepted.'], 200);
+        }
+
+        return response()->json(['message' => 'Friend request already processed.'], 400);
+    }
+
 }

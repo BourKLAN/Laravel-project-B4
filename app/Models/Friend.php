@@ -11,6 +11,7 @@ class Friend extends Model
     protected $fillable = [
         'sender_id',
         'recipients_id',
+        'status',
     ];
     public function user(){
         return $this->belongs(User::class,'user_id','id');

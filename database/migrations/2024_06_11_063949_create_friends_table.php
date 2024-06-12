@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('sender_id');
             $table->integer('recipients_id');
+            $table->string('status');
             $table->timestamps();
         });
     }

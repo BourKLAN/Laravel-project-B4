@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/like/toggleLike',[LikeController::class, 'toggleLike']);
     // friends request
     Route::post('/friend/addfriend',[FriendController::class, 'addfriend']);
+    Route::post('/friend/accept/{id}', [FriendController::class, 'acceptFriend']);
 
 });
 
