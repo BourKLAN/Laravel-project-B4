@@ -18,22 +18,44 @@ class CommentController extends Controller
         return response()->json(['success' => true, 'message'=>'Create successfully '], 200);
     }
     public function update(Request $request, string $id)
-    {
-        $comment = Comment::find($id);
-        if(!$comment){
-            return response()->json([
-               'message' => 'Comment not found'
-            ], 404);
-        }
-        $comment->text = $request->text;
-        $comment->save();
+{
 
-        return response()->json(['success' => true, 'message'=>'update successfully '], 200);
+    $comment = Comment::find($id);
+    if (!$comment) {
+        return response()->json([
+            'message' => 'Comment not found'
+        ], 404);
     }
-    public function destroy(string $id)
-    {
-        $comment = comment::find($id);
-        $comment->delete();
-        return ["success" => true, "Message" =>"comment deleted successfully"];
+    $user = $request->user();
+    if ($comment->user_id !== $user->id) {
+        return response()->json([
+            'message' => 'You can not update this comment'
+        ], 403);
     }
+
+    $comment->text = $request->text;
+    $comment->save();
+
+    // Return a success response
+    return response()->json(['success' => true, 'message' => 'Comment updated successfully'], 200);
+}
+
+public function destroy(Request $request, string $id)
+{
+    $comment = Comment::find($id);
+    if (!$comment) {
+        return response()->json([
+            'message' => 'Comment not found'
+        ], 404);
+    }
+    $user = $request->user();
+    if ($comment->user_id !== $user->id) {
+        return response()->json([
+            'message' => 'You can not delete this comment'
+        ], 403);
+    }
+    $comment->delete();
+    return response()->json(['success' => true, 'message' => 'Comment deleted successfully'], 200);
+}
+
 }

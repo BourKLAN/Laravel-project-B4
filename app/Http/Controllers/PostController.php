@@ -8,11 +8,17 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::with('user')->get();
+        $user = $request->user();
+        $posts = Post::with('user')->where('user_id', $user->id)->get();
+        if ($posts->isEmpty()) {
+            return response()->json(['message' => 'You have not post yet! '], 404);
+        }
         return response()->json($posts);
     }
+    
+    
 
     public function store(Request $request)
     {
@@ -28,51 +34,70 @@ class PostController extends Controller
         return response()->json(['success' => true, 'message'=>'Create successfully!'], 200);
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        $user = $request->user();
         $post = Post::with('user')->find($id);
-        
         if (!$post) {
             return response()->json([
                'message' => 'Post not found'
             ], 404);
         }
-        $post=new ShowPostCommentResource($post);
-        return response()->json(['success' => true, 'data' => $post], 200);
+
+        if ($post->user_id !== $user->id) {
+            return response()->json([
+               'message' => 'You can not view this Post!'
+            ], 403);
+        }
+    
+        $postResource = new ShowPostCommentResource($post);
+
+        return response()->json(['success' => true, 'data' => $postResource], 200);
     }
     
 
     public function update(Request $request, $id)
-    {
+{
+    $post = Post::find($id);
+    if (!$post) {
+        return response()->json([
+           'message' => 'Post not found'
+        ], 404);
+    }
+    if ($request->user()->id !== $post->user_id) {
+        return response()->json([
+           'message' => 'You are not authorized to update this post'
+        ], 403);
+    }
+    if ($request->has('title')) {
+        $post->title = $request->title;
+    }
+    if ($request->has('content')) {
+        $post->content = $request->content;
+    }
+    $post->save();
+    return response()->json(['success' => true, 'message' => 'Post updated successfully'], 200);
+}
 
-        $post = Post::find($id);
-        
-        if(!$post){
-            return response()->json([
-               'message' => 'Post not found'
-            ], 404);
-        }
-        if($request->has('title')) {
-            $post->title = $request->title;
-        }
-    
-        if($request->has('content')) {
-            $post->content = $request->content;
-        }
-        $post->save();
-        return response()->json(['success' => true, 'message'=>'update successfully '], 200);
+
+public function destroy(Request $request, $id)
+{
+
+    $post = Post::find($id);
+    if (!$post) {
+        return response()->json([
+            'message' => 'Post not found'
+        ], 404);
+    }
+    $user = $request->user();
+    if ($post->user_id !== $user->id) {
+        return response()->json([
+            'message' => 'You can not delete this post'
+        ], 403);
     }
 
-    public function destroy($id)
-    {
-        
-        $post = Post::find($id);
-        if(!$post){
-            return response()->json([
-               'message' => 'Post not found'
-            ], 404);
-        }
-        $post->delete();
-        return response()->json(['message' => 'Post deleted successfully 1']);
-    }
+    $post->delete();
+    return response()->json(['message' => 'Post deleted successfully'], 200);
+}
+
 }
