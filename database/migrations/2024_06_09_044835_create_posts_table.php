@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('content')->nullable();
             $table->integer('media_id')->nullable();
             $table->integer('user_id');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

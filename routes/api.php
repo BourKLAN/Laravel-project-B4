@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\MedaiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PostController;
@@ -47,10 +48,28 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::post('/photos/create', [MediaController::class, 'store']);
 
     //Comment==============================================
- 
     Route::post('/comment/create',[CommentController::class,'store']);
     Route::put('/comment/update/{id}',[CommentController::class,'update']);
     Route::delete('/comment/delete/{id}',[CommentController::class, 'destroy']);
+
+    //RequestFriend
+    Route::get('/requestFriend/list',[FriendRequestController::class,'index']);
+    Route::post('/requestFriend/create',[FriendRequestController::class,'addFriend']);
+
+    Route::get('/FriendhaveRequest/list',[FriendRequestController::class,'displayRequestFriend']);
+
+    //Handle request friend================
+    Route::post('/handleRequest',[FriendRequestController::class,'handleRequestFriend']);
+
+
+    //Unfriend================
+    Route::post('/unfriend',[FriendRequestController::class,'unfriend']);
+
+    //Get all friend of each User================
+    Route::get('/friend/list',[FriendRequestController::class,'getFriends']);
+
+
+
 });
 
 
