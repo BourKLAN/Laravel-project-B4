@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 
 class FriendRequestController extends Controller
 {
+    //==============List all people that I have request to============
     public function index(Request $request)
     {
         $userId = $request->user()->id;
@@ -26,29 +27,43 @@ class FriendRequestController extends Controller
         $friendRequests=FriendRequestResource::collection($friendRequests);
         return response()->json(['success' => true,'message'=>'All friends that I have request...', 'data' => $friendRequests], 200);
     }
-    public function store(Request $request)
-    {
-        $userId = $request->user()->id;
-        $receiverId = $request->reciever_id;
-        $friendRequest = FriendRequest::where('sender_id', $userId)->where('reciever_id', $receiverId)->first();
-        if ($friendRequest) {
-            $friendRequest->delete();
-            return response()->json(['success' => true, 'message' => "Friend request canceled"], 200);
-        }
-        $friendRequest = new FriendRequest();
-        $friendRequest->sender_id = $userId;
-        $friendRequest->reciever_id = $receiverId;
-        $friendRequest->status = "pending";
-        $friendRequest->save();
 
-        return response()->json(['success' => true, 'message' => "Friend request sent successfully"], 200);
+    public function addFriend(Request $request)
+{
+    $userId = $request->user()->id;
+    $receiverId = $request->reciever_id;
+
+    // ==========find who have been friend no need to request again=========
+    $existingFriend = Friend::where(function($query) use ($userId, $receiverId) {
+        $query->where('user_id1', $userId)->where('user_id2', $receiverId);
+    })->orWhere(function($query) use ($userId, $receiverId) {
+        $query->where('user_id1', $receiverId)->where('user_id2', $userId);
+    })->first();
+
+    if ($existingFriend) {
+        return response()->json(['success' => false, 'message' => 'You are already friends'], 200);
     }
+    //=======Find who have request friend======
+    $friendRequest = FriendRequest::where('sender_id', $userId)->where('reciever_id', $receiverId)->first();
+    if ($friendRequest) {
+        return response()->json(['success' => true, 'message' => 'Friend request already sent'], 200);
+    }
+    //=====request friend======
+    $friendRequest = new FriendRequest();
+    $friendRequest->sender_id = $userId;
+    $friendRequest->reciever_id = $receiverId;
+    $friendRequest->status = "pending";
+    $friendRequest->save();
 
-    public function DisplayRequestFriend(Request $request)
+    return response()->json(['success' => true, 'message' => 'Friend request sent successfully'], 200);
+}
+
+
+    //==============List all people that have request friend to me=============
+    public function displayRequestFriend(Request $request)
     {
         $userId = $request->user()->id;
         $friendRequests = FriendRequest::with(['reciever'])->where('reciever_id', $userId)->get();
-
         if ($friendRequests->isEmpty()) {
             return response()->json([
                 'message' => 'No friend requests'
@@ -57,7 +72,7 @@ class FriendRequestController extends Controller
         $friendRequests=ShowSenderResource::collection($friendRequests);
         return response()->json(['success' => true,'message'=>'Friend that have request...', 'data' => $friendRequests], 200);
     }
-
+    //=====Handel request friend it mean that I can accept or decline a friend request that I want======
     public function handleRequestFriend(Request $request)
     {
         $request_id=$request->request_id;
@@ -88,7 +103,7 @@ public function unfriend(Request $request)
 {
     $userId = $request->user()->id;
     //($friendId) request friend that you want to unfriend==========
-    $friendId = $request->friend_id;
+    $friendId = $request->user_id;
 
     $friendship = Friend::where(function($query) use ($userId, $friendId) {
         $query->where('user_id1', $userId)->where('user_id2', $friendId);
@@ -110,7 +125,7 @@ public function unfriend(Request $request)
 }
 
 
-//Get Friend of each User================================
+//=============Get all friend that I have================================
 public function getFriends(Request $request)
     {
         $userId = $request->user()->id;

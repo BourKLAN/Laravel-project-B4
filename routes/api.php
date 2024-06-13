@@ -54,9 +54,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //RequestFriend
     Route::get('/requestFriend/list',[FriendRequestController::class,'index']);
-    Route::post('/requestFriend/create',[FriendRequestController::class,'store']);
+    Route::post('/requestFriend/create',[FriendRequestController::class,'addFriend']);
 
-    Route::get('/FriendhaveRequest/list',[FriendRequestController::class,'DisplayRequestFriend']);
+    Route::get('/FriendhaveRequest/list',[FriendRequestController::class,'displayRequestFriend']);
 
     //Handle request friend================
     Route::post('/handleRequest',[FriendRequestController::class,'handleRequestFriend']);
