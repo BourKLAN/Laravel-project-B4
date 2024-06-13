@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Resources\ImageResource;
+use App\Http\Resources\ViewProfileResource;
 use App\Models\Media;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -21,6 +22,15 @@ class UserController extends Controller
             'data'  => $request->user(),
         ]);
     }
+    public function myProfile(Request $request)
+{
+    $userInformation = $request->user();
+    $userInformation = new ViewProfileResource($userInformation);
+    return response()->json([
+        'data' => $userInformation,
+    ]);
+}
+
     public function updateProfilePicture(Request $request)
     {
         $user = Auth::user();  // Get the authenticated user

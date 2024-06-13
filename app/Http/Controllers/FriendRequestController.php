@@ -27,7 +27,7 @@ class FriendRequestController extends Controller
         $friendRequests=FriendRequestResource::collection($friendRequests);
         return response()->json(['success' => true,'message'=>'All friends that I have request...', 'data' => $friendRequests], 200);
     }
-
+//============= Add friend or send request===========
     public function addFriend(Request $request)
 {
     $userId = $request->user()->id;
