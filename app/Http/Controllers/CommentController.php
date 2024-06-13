@@ -14,7 +14,7 @@ class CommentController extends Controller
         $comment->text = $request->text;
         $comment->post_id = $request->post_id;
         $comment->save();
-
+        
         return response()->json(['success' => true, 'message'=>'Create successfully '], 200);
     }
     public function update(Request $request, string $id)
