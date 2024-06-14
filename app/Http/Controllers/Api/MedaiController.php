@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Media;
 use Illuminate\Http\Request;
 
-
 /**
  * @OA\Get(
  *  path="/api/me",

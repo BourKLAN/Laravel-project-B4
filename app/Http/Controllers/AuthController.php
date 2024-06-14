@@ -9,6 +9,32 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+    /**
+     * @OA\Post(
+     *     path="/api/auth/register",
+     *     tags={"Register"},
+     *     summary="Register a new user",
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="email", type="string"),
+     *             @OA\Property(property="password", type="string"),
+     *             @OA\Property(property="c_password", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="accessToken", type="string")
+     *         )
+     *     )
+     * )
+     */
+
 class AuthController extends Controller
 {
     public function register(Request $request): JsonResponse
@@ -40,6 +66,40 @@ class AuthController extends Controller
         ], 201);
     }
 
+
+    /**
+     * @OA\Post(
+     *     path="/api/auth/login",
+     *     tags={"Register"},
+     *     summary="Login a user",
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="email", type="string"),
+     *             @OA\Property(property="password", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="access_token", type="string"),
+     *             @OA\Property(property="token_type", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Invalid credentials",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     )
+     * )
+     */
+
     public function login(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -66,6 +126,23 @@ class AuthController extends Controller
         ]);
     }
 
+      /**
+     * @OA\Post(
+     *     path="/api/auth/logout",
+     *     tags={"Register"},
+     *     summary="Logout the authenticated user",
+     *     security={{"sanctum": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     )
+     * )
+     */
+
     public function logout(Request $request): JsonResponse
     {
         $user = Auth::guard('sanctum')->user();
@@ -84,6 +161,27 @@ class AuthController extends Controller
             'message' => 'Logout successful',
         ]);
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/auth/user",
+     *     tags={"Register"},
+     *     summary="Get the authenticated user",
+     *     security={{"sanctum": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="id", type="integer"),
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="email", type="string"),
+     *             @OA\Property(property="created_at", type="string", format="date-time"),
+     *             @OA\Property(property="updated_at", type="string", format="date-time")
+     *         )
+     *     )
+     * )
+     */
 
     public function index(Request $request): JsonResponse
     {
