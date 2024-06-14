@@ -76,11 +76,11 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $userData = $user->toArray(); 
+        $userData = $user->toArray();
         $user->currentAccessToken()->delete();
 
         return response()->json([
-            'success'=>true,
+            'success' => true,
             'message' => 'Logout successful',
         ]);
     }
@@ -100,5 +100,4 @@ class AuthController extends Controller
             ],
         ]);
     }
-    
 }
