@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\MedaiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\CommentSharecontroller;
 use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MediaController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\SharePostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\LikeSharecontroller;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -74,6 +76,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //share Post
     Route::post('/share/post',[SharePostController::class,'sharePost']);
+    Route::put('/share/post/{id}',[SharePostController::class,'updateShare']);
+    // comment share
+    Route::post('/comment/share',[CommentSharecontroller::class,'commentShare']);
+    Route::put('/comment/share/{id}',[CommentSharecontroller::class,'updateComment']);
+    Route::delete('/comment/share/{id}',[CommentSharecontroller::class,'destroyComment']);
+    // like share
+    Route::post('/like/share',[LikeSharecontroller::class,'Likeshare']);
+    Route::post('/unlike/share',[LikeSharecontroller::class,'unlikeShare']);
+    
+    
 
 
 
