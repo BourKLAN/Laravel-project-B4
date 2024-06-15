@@ -64,7 +64,7 @@ class FriendRequestController extends Controller
     public function displayRequestFriend(Request $request)
     {
         $userId = $request->user()->id;
-        $friendRequests = FriendRequests::with(['reciever'])->where('reciever_id', $userId)->get();
+        $friendRequests = FriendRequests::with(['receiver'])->where('reciever_id', $userId)->get();
         if ($friendRequests->isEmpty()) {
             return response()->json([
                 'message' => 'No friend requests'
@@ -73,6 +73,7 @@ class FriendRequestController extends Controller
         $friendRequests=ShowSenderResource::collection($friendRequests);
         return response()->json(['success' => true,'message'=>'Friend that have request...', 'data' => $friendRequests], 200);
     }
+
     //=====Handel request friend it mean that I can accept or decline a friend request that I want======
     public function handleRequestFriend(Request $request)
     {
@@ -128,24 +129,44 @@ public function unfriend(Request $request)
 
 //=============Get all friend that I have================================
 public function getFriends(Request $request)
-    {
-        $userId = $request->user()->id;
+{
+    $userId = $request->user()->id;
 
-        $friendships = Friend::where('user_id1', $userId) ->orWhere('user_id2', $userId)->get();
-        
+    $friendships = Friend::where('user_id1', $userId)
+        ->orWhere('user_id2', $userId)
+        ->get();
 
-        foreach ($friendships as $friendship) {
-            if ($friendship->user_id1 == $userId) {
-                $friendIds[] = $friendship->user_id2;
-            } else {
-                $friendIds[] = $friendship->user_id1;
-            }
+    $friendIds = []; // Initialize the $friendIds array
+
+    foreach ($friendships as $friendship) {
+        if ($friendship->user_id1 == $userId) {
+            $friendIds[] = $friendship->user_id2;
+        } else {
+            $friendIds[] = $friendship->user_id1;
         }
-       $countFriends = count($friendIds);
-        $friends = User::whereIn('id', $friendIds)->get();
-        $friends=ShowFriendResource::collection($friends);
-        return response()->json(['success' => true, 'message'=>'Here is your friends.','Data' => $friends,'count_friend'=>$countFriends], 200);
     }
+
+    $countFriends = count($friendIds);
+
+    // Check if $friendIds is empty
+    if ($countFriends == 0) {
+        return response()->json([
+            'message' => 'No friends yet.',
+            'count_friend' => 0
+        ], 401);
+    }
+
+    $friends = User::whereIn('id', $friendIds)->get();
+    $friends = ShowFriendResource::collection($friends);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Here are your friends.',
+        'Data' => $friends,
+        'count_friend' => $countFriends
+    ], 200);
+}
+
 
 
 }

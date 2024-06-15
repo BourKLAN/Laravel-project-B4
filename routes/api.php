@@ -7,6 +7,7 @@ use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\SharePostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LikeController;
 use Illuminate\Support\Facades\Route;
@@ -71,6 +72,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/friend/list',[FriendRequestController::class,'getFriends']);
 
 
+    //share Post
+    Route::post('/share/post',[SharePostController::class,'sharePost']);
+
+
 
 });
 
@@ -79,27 +84,7 @@ Route::post('/photos/create', [MedaiController::class, 'store']);
 Route::get('/photos/list', [MedaiController::class, 'index']);
 
 
-// Route::prefix('api')->group(function () {
-//     Route::post('/register', [AuthController::class, 'register']);
-//     Route::post('/login', [AuthController::class, 'login']);
-//     Route::post('/logout', [AuthController::class, 'logout']);
-//     Route::post('password/email', [AuthController::class, 'sendResetLinkEmail']);
-//     Route::post('password/reset', [AuthController::class, 'reset']);
 
-//     Route::middleware('auth:sanctum')->group(function () {
-//         Route::get('/me', [AuthController::class, 'index']);
-//         Route::post('/updateProfilePicture', [UserController::class, 'updateProfilePicture']);
-
-//         //Post routes prefixed with /post
-//         Route::prefix('post')->group(function () {
-//             Route::get('/list', [PostController::class, 'index']);
-//             Route::post('/create', [PostController::class, 'store']);
-//             Route::get('/show/{id}', [PostController::class, 'show']);
-//             Route::delete('/delete/{id}', [PostController::class, 'destroy']);
-//             Route::post('/update/{id}', [PostController::class, 'update']);
-//         });
-//     });
-// });
 
 
 

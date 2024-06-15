@@ -14,6 +14,7 @@
                 "description": "Register a new user and return the access token",
                 "operationId": "8a56853624e025573120a09a4c75d468",
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
