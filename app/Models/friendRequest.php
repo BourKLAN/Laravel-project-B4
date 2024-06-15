@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class friendRequest extends Model
+class FriendRequest extends Model
 {
     use HasFactory,SoftDeletes;
     protected $fillable = [
@@ -19,7 +19,5 @@ class friendRequest extends Model
     public function user(){
         return $this->belongsTo(User::class,'sender_id');
     }
-
-
 
 }
