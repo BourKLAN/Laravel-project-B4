@@ -31,13 +31,13 @@
                 }
             }
         },
-        "/api/auth/register": {
+        "/api/register": {
             "post": {
                 "tags": [
                     "Register"
                 ],
                 "summary": "Register a new user",
-                "operationId": "70d0c548f985470e8d490cc5a1ef47db",
+                "operationId": "e62b6d5b548be003e473107717338fc7",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -83,13 +83,13 @@
                 }
             }
         },
-        "/api/auth/login": {
+        "/api/login": {
             "post": {
                 "tags": [
                     "Register"
                 ],
                 "summary": "Login a user",
-                "operationId": "8dcb70df1020986038d098cc08d05dae",
+                "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -147,13 +147,13 @@
                 }
             }
         },
-        "/api/auth/logout": {
+        "/api/logout": {
             "post": {
                 "tags": [
                     "Register"
                 ],
                 "summary": "Logout the authenticated user",
-                "operationId": "69281b12abb272c76871f19cb17ca563",
+                "operationId": "fe8f3429cd6979b3b4517e186505f9f9",
                 "responses": {
                     "200": {
                         "description": "Successful response",
@@ -178,13 +178,13 @@
                 ]
             }
         },
-        "/api/auth/user": {
+        "/api/user": {
             "get": {
                 "tags": [
                     "Register"
                 ],
                 "summary": "Get the authenticated user",
-                "operationId": "19588163645f8a19bf2de772c3b879b0",
+                "operationId": "cb77794beb5577bd3eebf54a55b82fc8",
                 "responses": {
                     "200": {
                         "description": "Successful response",

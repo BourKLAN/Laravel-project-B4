@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
     /**
      * @OA\Post(
-     *     path="/api/auth/register",
+     *     path="/api/register",
      *     tags={"Register"},
      *     summary="Register a new user",
      *     @OA\RequestBody(
@@ -69,7 +69,7 @@ class AuthController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/auth/login",
+     *     path="/api/login",
      *     tags={"Register"},
      *     summary="Login a user",
      *     @OA\RequestBody(
@@ -128,7 +128,7 @@ class AuthController extends Controller
 
       /**
      * @OA\Post(
-     *     path="/api/auth/logout",
+     *     path="/api/logout",
      *     tags={"Register"},
      *     summary="Logout the authenticated user",
      *     security={{"sanctum": {}}},
@@ -164,7 +164,7 @@ class AuthController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/auth/user",
+     *     path="/api/user",
      *     tags={"Register"},
      *     summary="Get the authenticated user",
      *     security={{"sanctum": {}}},
