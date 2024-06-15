@@ -6,6 +6,7 @@ use App\Http\Resources\FriendRequestResource;
 use App\Http\Resources\ShowFriendResource;
 use App\Http\Resources\ShowSenderResource;
 use App\Models\Friend;
+use App\Models\FriendRequests;
 use App\Models\User;
 use App\Models\friendRequest;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class FriendRequestController extends Controller
     public function index(Request $request)
     {
         $userId = $request->user()->id;
-        $friendRequests = FriendRequest::with(['user'])->where('sender_id', $userId)->get();
+        $friendRequests = FriendRequests::with(['user'])->where('sender_id', $userId)->get();
 
         if ($friendRequests->isEmpty()) {
             return response()->json([
@@ -44,12 +45,12 @@ class FriendRequestController extends Controller
         return response()->json(['success' => false, 'message' => 'You are already friends'], 200);
     }
     //=======Find who have request friend======
-    $friendRequest = FriendRequest::where('sender_id', $userId)->where('reciever_id', $receiverId)->first();
+    $friendRequest = FriendRequests::where('sender_id', $userId)->where('reciever_id', $receiverId)->first();
     if ($friendRequest) {
         return response()->json(['success' => true, 'message' => 'Friend request already sent'], 200);
     }
     //=====request friend======
-    $friendRequest = new FriendRequest();
+    $friendRequest = new FriendRequests();
     $friendRequest->sender_id = $userId;
     $friendRequest->reciever_id = $receiverId;
     $friendRequest->status = "pending";
@@ -63,7 +64,7 @@ class FriendRequestController extends Controller
     public function displayRequestFriend(Request $request)
     {
         $userId = $request->user()->id;
-        $friendRequests = FriendRequest::with(['reciever'])->where('reciever_id', $userId)->get();
+        $friendRequests = FriendRequests::with(['reciever'])->where('reciever_id', $userId)->get();
         if ($friendRequests->isEmpty()) {
             return response()->json([
                 'message' => 'No friend requests'
@@ -77,7 +78,7 @@ class FriendRequestController extends Controller
     {
         $request_id=$request->request_id;
         
-        $friendRequest = FriendRequest::find($request_id);
+        $friendRequest = FriendRequests::find($request_id);
         // return $friendRequest;
         if (!$friendRequest) {
             return response()->json(['error' => 'Friend request not found'], 404);
