@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->now();
             $table->string('password');
             $table->softDeletes();
-            $table->integer('media_id')->nullable();
+            $table->string('image')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

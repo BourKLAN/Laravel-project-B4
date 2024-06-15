@@ -26,7 +26,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'media_id'
+        'image'
     ];
 
     /**
@@ -52,8 +52,5 @@ class User extends Authenticatable
         ];
     }
 
-    public function media()
-    {
-        return $this->belongsTo(Media::class, 'media_id', 'id');
-    }
+   
 }

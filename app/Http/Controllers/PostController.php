@@ -26,9 +26,6 @@ class PostController extends Controller
         $post->user_id = $request->user()->id;
         $post->title = $request->title;
         $post->content = $request->content;
-        if($request->has('media_id')) {
-            $post->media_id = $request->media_id;
-        }
         $post->save();
         
         return response()->json(['success' => true, 'message'=>'Create successfully!'], 200);
