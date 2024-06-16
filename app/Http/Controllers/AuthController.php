@@ -69,7 +69,7 @@ class AuthController extends Controller
         ], 201);
     }
 
- //login
+  //login
 /**
      * @OA\Post(
      *     path="/api/login",
@@ -128,6 +128,7 @@ class AuthController extends Controller
             'token_type' => 'Bearer'
         ]);
     }
+    //logout
 /**
  * @OA\Post(
  *     path="/api/logout",
@@ -188,6 +189,7 @@ class AuthController extends Controller
             ],
         ]);
     }
+    //forgot password
 /**
  * @OA\Post(
  *     path="/api/forgot/password",
@@ -253,7 +255,7 @@ class AuthController extends Controller
     
         return response()->json(['message' => 'Password reset link sent to your email','token' => $token]);
     }
-
+//reset password
     /**
  * @OA\Post(
  *     path="/api/reset/password",

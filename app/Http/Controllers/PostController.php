@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
-
-
     //=====show all post =========
     public function index(Request $request)
     {
@@ -20,7 +18,7 @@ class PostController extends Controller
         }
         return response()->json($posts);
     }
-    
+    //create post
     /**
  * @OA\Post(
  *     path="/api/post/create",
@@ -120,7 +118,6 @@ public function destroy(Request $request, $id)
             'message' => 'You can not delete this post'
         ], 403);
     }
-
     $post->delete();
     return response()->json(['message' => 'Post deleted successfully'], 200);
 }
