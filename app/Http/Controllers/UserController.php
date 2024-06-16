@@ -40,6 +40,7 @@ class UserController extends Controller
 //===========update profile picture for user after login===========
 public function uploadProfilePicture(Request $request)
     {
+    
         $validateUser = Validator::make($request->all(), [
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);

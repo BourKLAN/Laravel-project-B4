@@ -251,7 +251,7 @@ class AuthController extends Controller
         // Send the password reset email
         // Mail::to($user->email)->send(new ResetPasswordMail($token));
     
-        return response()->json(['message' => 'Password reset link sent to your email']);
+        return response()->json(['message' => 'Password reset link sent to your email','token' => $token]);
     }
 
     /**
