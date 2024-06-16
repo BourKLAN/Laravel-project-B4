@@ -15,45 +15,52 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-      /**
-     * @OA\Post(
-     *     path="/api/register",
-     *     summary="Register a new user",
-     *     description="Register a new user and return the access token",
-     *     tags={"Authentication"},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             required={"name", "email", "password"},
-     *             @OA\Property(property="name", type="string"),
-     *             @OA\Property(property="email", type="string"),
-     *             @OA\Property(property="password", type="string")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="Registration successful",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string"),
-     *             @OA\Property(property="access_token", type="string"),
-     *             @OA\Property(property="token_type", type="string")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validation error",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
-     *             @OA\Property(
-     *                 property="errors",
-     *                 type="object",
-     *                 @OA\AdditionalProperties(
-     *                     @OA\Property(type="array", @OA\Items(type="string"))
-     *                 )
-     *             )
-     *         )
-     *     )
-     * )
-     */
+     /**
+ * @OA\Post(
+ *     path="/api/register",
+ *     summary="Register a new user",
+ *     description="Register a new user and return the access token",
+ *     tags={"Auth"},
+ *     @OA\RequestBody(
+ *         @OA\JsonContent(
+ *             required={"name", "email", "password"},
+ *             @OA\Property(property="name", type="string"),
+ *             @OA\Property(property="email", type="string"),
+ *             @OA\Property(property="password", type="string")
+ *         )
+ *     ),
+ *     @OA\Parameter(
+ *         name="X-CSRF-TOKEN",
+ *         in="header",
+ *         required=true,
+ *         @OA\Schema(type="string")
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="Registration successful",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string"),
+ *             @OA\Property(property="access_token", type="string"),
+ *             @OA\Property(property="token_type", type="string")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Validation error",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+ *             @OA\Property(
+ *                 property="errors",
+ *                 type="object",
+ *                 @OA\AdditionalProperties(
+ *                     @OA\Property(type="array", @OA\Items(type="string"))
+ *                 )
+ *             )
+ *         )
+ *     )
+ * )
+ */
+
 public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -86,7 +93,7 @@ public function register(Request $request): JsonResponse
  /**
      * @OA\Post(
      *     path="/api/login",
-     *     tags={"Register"},
+     *     tags={"Auth"},
      *     summary="Login a user",
      *     @OA\RequestBody(
      *         @OA\JsonContent(
@@ -144,7 +151,7 @@ public function register(Request $request): JsonResponse
  /**
      * @OA\Post(
      *     path="/api/logout",
-     *     tags={"Register"},
+     *     tags={"Auth"},
      *     summary="Logout the authenticated user",
      *     security={{"sanctum": {}}},
      *     @OA\Response(
@@ -220,7 +227,7 @@ public function register(Request $request): JsonResponse
         ]);
     
         // Send the password reset email
-        Mail::to($user->email)->send(new ResetPasswordMail($token));
+        // Mail::to($user->email)->send(new ResetPasswordMail($token));
     
         return response()->json(['message' => 'Password reset link sent to your email']);
     }
