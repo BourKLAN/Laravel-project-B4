@@ -22,4 +22,12 @@ class SharePosts extends Model
     function post(){
         return $this->belongsTo(Post::class,'post_id');
     }
+
+    function commentShare(){
+        return $this->hasMany(CommentShare::class);
+    }
+
+    function likeShare(){
+        return $this->hasMany(LikeShare::class);
+    }
 }

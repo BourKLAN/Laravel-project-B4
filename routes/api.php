@@ -29,14 +29,10 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
-// Route::post('password/email', [AuthController::class, 'sendResetLinkEmail']);
-// Route::post('password/reset', [AuthController::class, 'reset']);
-
 // Password Reset Request Route
-Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.forgot');
-
+Route::post('/forgot/password', [AuthController::class, 'forgotPassword'])->name('password.forgot');
 // Password Reset Route
-Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
+Route::post('/reset/password', [AuthController::class, 'resetPassword'])->name('password.reset');
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -82,14 +78,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //share Post
     Route::post('/share/post',[SharePostController::class,'sharePost']);
-    Route::put('/share/post/{id}',[SharePostController::class,'updateShare']);
+    Route::get('/share/post/list',[SharePostController::class,'showAllShare']);
+    Route::get('/share/post/show/{id}',[SharePostController::class,'showSharePost']);
+
+
     // comment share
     Route::post('/comment/share',[CommentSharecontroller::class,'commentShare']);
-    Route::put('/comment/share/{id}',[CommentSharecontroller::class,'updateComment']);
-    Route::delete('/comment/share/{id}',[CommentSharecontroller::class,'destroyComment']);
+    Route::put('/comment/share/update/{id}',[CommentSharecontroller::class,'updateComment']);
+    Route::delete('/comment/share/delete/{id}',[CommentSharecontroller::class,'destroyComment']);
+    
     // like share
-    Route::post('/like/share',[LikeSharecontroller::class,'Likeshare']);
-    Route::post('/unlike/share',[LikeSharecontroller::class,'unlikeShare']);
+    Route::post('/like/Unlike/share',[LikeSharecontroller::class,'unlikeShare']);
     
     
 
@@ -98,8 +97,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-Route::post('/photos/create', [MedaiController::class, 'store']);
-Route::get('/photos/list', [MedaiController::class, 'index']);
+
 
 
 

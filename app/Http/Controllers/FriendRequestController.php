@@ -100,7 +100,7 @@ class FriendRequestController extends Controller
             return response()->json(['message' => 'Friend request declined'], 200);
         }
 }
-
+//===========Unfriend for each user=========
 public function unfriend(Request $request)
 {
     $userId = $request->user()->id;

@@ -15,6 +15,8 @@ class CommentSharecontroller extends Controller
         $comment->save();
         return response()->json(['success' => true, 'message'=>'Create successfully '], 200);
     }
+
+    //==============update comment on share==============
     public function updateComment(Request $request, string $id){
         $comment = CommentShare::find($id);
         if (!$comment) {
@@ -35,6 +37,8 @@ class CommentSharecontroller extends Controller
         // Return a success response
         return response()->json(['success' => true, 'message' => 'Comment updated successfully'], 200);
     }
+
+    //==============delete comment on share==============
     public function destroyComment(Request $request, string $id){
         $comment = CommentShare::find($id);
         if (!$comment) {
