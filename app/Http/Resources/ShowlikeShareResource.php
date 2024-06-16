@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FriendRequestResource extends JsonResource
+class ShowlikeShareResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,10 +15,7 @@ class FriendRequestResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'request_id' => $this->id,
-            'receiver' => $this->reciever ? $this->reciever->name : 'Unknown',
-            'status' => $this->status,
-            'request_date' => $this->created_at->format('d-m-Y'),
+            'user'=>$this->user->name,
         ];
     }
 }

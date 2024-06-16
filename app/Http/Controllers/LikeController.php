@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 class LikeController extends Controller
 {
+
+    //=======like and unlike for each post===========
     public function toggleLike(Request $request)
     {
         $userId = $request->user()->id;

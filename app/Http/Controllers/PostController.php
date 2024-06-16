@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
+    //=====show all post =========
     public function index(Request $request)
     {
         $user = $request->user();
@@ -19,7 +20,7 @@ class PostController extends Controller
     }
     
     
-
+//=====create a new post===========
     public function store(Request $request)
     {
         $post = new Post();
@@ -31,6 +32,7 @@ class PostController extends Controller
         return response()->json(['success' => true, 'message'=>'Create successfully!'], 200);
     }
 
+    //======show a single post=========
     public function show(Request $request, $id)
     {
         $user = $request->user();
@@ -52,7 +54,7 @@ class PostController extends Controller
         return response()->json(['success' => true, 'data' => $postResource], 200);
     }
     
-
+//=================update post==============
     public function update(Request $request, $id)
 {
     $post = Post::find($id);
@@ -76,7 +78,7 @@ class PostController extends Controller
     return response()->json(['success' => true, 'message' => 'Post updated successfully'], 200);
 }
 
-
+//===========destroy post =============================
 public function destroy(Request $request, $id)
 {
 

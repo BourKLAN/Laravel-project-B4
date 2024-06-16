@@ -19,14 +19,15 @@ class FriendRequestController extends Controller
     {
         $userId = $request->user()->id;
         $friendRequests = FriendRequests::with(['user'])->where('sender_id', $userId)->get();
-
+        
         if ($friendRequests->isEmpty()) {
             return response()->json([
                 'message' => 'You do not request friend yet'
             ]);
         }
         $friendRequests=FriendRequestResource::collection($friendRequests);
-        return response()->json(['success' => true,'message'=>'All friends that I have request...', 'data' => $friendRequests], 200);
+        return $friendRequests;
+        // return response()->json(['success' => true,'message'=>'All friends that I have request...', 'data' => $friendRequests], 200);
     }
 //============= Add friend or send request===========
     public function addFriend(Request $request)
@@ -100,7 +101,7 @@ class FriendRequestController extends Controller
             return response()->json(['message' => 'Friend request declined'], 200);
         }
 }
-
+//===========Unfriend for each user=========
 public function unfriend(Request $request)
 {
     $userId = $request->user()->id;

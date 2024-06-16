@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+    // ===========display profile for user after login===========
     public function me(Request $request): JsonResponse
     {
         return response()->json([
@@ -24,6 +25,8 @@ class UserController extends Controller
             'data'  => $request->user(),
         ]);
     }
+
+    //===========view profile for user after login===========
     public function myProfile(Request $request)
 {
     $userInformation = $request->user();
@@ -33,7 +36,7 @@ class UserController extends Controller
     ]);
 }
 
-
+//===========update profile picture for user after login===========
 public function uploadProfilePicture(Request $request)
     {
         $validateUser = Validator::make($request->all(), [
@@ -70,6 +73,8 @@ public function uploadProfilePicture(Request $request)
     }
 
 
+
+//===========update profile  for user after login===========
     public function updateProfile(Request $request){
         $user = Auth::user();         
         if($request->has('name')) {

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
+    //============create comment============
     public function store(Request $request)
     {
         $comment = new Comment();
@@ -17,6 +18,8 @@ class CommentController extends Controller
         
         return response()->json(['success' => true, 'message'=>'Create successfully '], 200);
     }
+
+    //==============update comment==============
     public function update(Request $request, string $id)
 {
 
@@ -39,7 +42,7 @@ class CommentController extends Controller
     // Return a success response
     return response()->json(['success' => true, 'message' => 'Comment updated successfully'], 200);
 }
-
+//===========destroy comment================
 public function destroy(Request $request, string $id)
 {
     $comment = Comment::find($id);
