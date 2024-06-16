@@ -70,8 +70,6 @@ public function uploadProfilePicture(Request $request)
     }
 
 
-
-
     public function updateProfile(Request $request){
         $user = Auth::user();         
         if($request->has('name')) {
