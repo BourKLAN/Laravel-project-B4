@@ -3,11 +3,15 @@
 use App\Http\Controllers\Api\MedaiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\CommentSharecontroller;
+use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\SharePostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\LikeSharecontroller;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,13 +29,16 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
-Route::post('password/email', [AuthController::class, 'sendResetLinkEmail']);
-Route::post('password/reset', [AuthController::class, 'reset']);
+// Password Reset Request Route
+Route::post('/forgot/password', [AuthController::class, 'forgotPassword'])->name('password.forgot');
+// Password Reset Route
+Route::post('/reset/password', [AuthController::class, 'resetPassword'])->name('password.reset');
 
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/me', [AuthController::class, 'index']);
-    Route::put('/updateProfilePicture', [UserController::class, 'updateProfilePicture']);
+    Route::get('/view/profile', [UserController::class, 'myProfile']);
+    Route::put('/updateProfilePicture', [UserController::class, 'uploadProfilePicture']);
     Route::put('/updateProfile', [UserController::class, 'updateProfile']);
 
     //Post=================================================
@@ -48,38 +55,52 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::post('/photos/create', [MediaController::class, 'store']);
 
     //Comment==============================================
- 
     Route::post('/comment/create',[CommentController::class,'store']);
     Route::put('/comment/update/{id}',[CommentController::class,'update']);
     Route::delete('/comment/delete/{id}',[CommentController::class, 'destroy']);
+
+    //RequestFriend
+    Route::get('/requestFriend/list',[FriendRequestController::class,'index']);
+    Route::post('/requestFriend/create',[FriendRequestController::class,'addFriend']);
+
+    Route::get('/FriendhaveRequest/list',[FriendRequestController::class,'displayRequestFriend']);
+
+    //Handle request friend================
+    Route::post('/handleRequest',[FriendRequestController::class,'handleRequestFriend']);
+
+
+    //Unfriend================
+    Route::post('/unfriend',[FriendRequestController::class,'unfriend']);
+
+    //Get all friend of each User================
+    Route::get('/friend/list',[FriendRequestController::class,'getFriends']);
+
+
+    //share Post
+    Route::post('/share/post',[SharePostController::class,'sharePost']);
+    Route::get('/share/post/list',[SharePostController::class,'showAllShare']);
+    Route::get('/share/post/show/{id}',[SharePostController::class,'showSharePost']);
+
+
+    // comment share
+    Route::post('/comment/share',[CommentSharecontroller::class,'commentShare']);
+    Route::put('/comment/share/update/{id}',[CommentSharecontroller::class,'updateComment']);
+    Route::delete('/comment/share/delete/{id}',[CommentSharecontroller::class,'destroyComment']);
+    
+    // like share
+    Route::post('/like/Unlike/share',[LikeSharecontroller::class,'unlikeShare']);
+    
+    
+
+
+
 });
 
 
-Route::post('/photos/create', [MedaiController::class, 'store']);
-Route::get('/photos/list', [MedaiController::class, 'index']);
 
 
-// Route::prefix('api')->group(function () {
-//     Route::post('/register', [AuthController::class, 'register']);
-//     Route::post('/login', [AuthController::class, 'login']);
-//     Route::post('/logout', [AuthController::class, 'logout']);
-//     Route::post('password/email', [AuthController::class, 'sendResetLinkEmail']);
-//     Route::post('password/reset', [AuthController::class, 'reset']);
 
-//     Route::middleware('auth:sanctum')->group(function () {
-//         Route::get('/me', [AuthController::class, 'index']);
-//         Route::post('/updateProfilePicture', [UserController::class, 'updateProfilePicture']);
 
-//         //Post routes prefixed with /post
-//         Route::prefix('post')->group(function () {
-//             Route::get('/list', [PostController::class, 'index']);
-//             Route::post('/create', [PostController::class, 'store']);
-//             Route::get('/show/{id}', [PostController::class, 'show']);
-//             Route::delete('/delete/{id}', [PostController::class, 'destroy']);
-//             Route::post('/update/{id}', [PostController::class, 'update']);
-//         });
-//     });
-// });
 
 
 

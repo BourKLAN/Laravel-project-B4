@@ -6,18 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Like extends Model
+class FriendRequests extends Model
 {
     use HasFactory,SoftDeletes;
     protected $fillable = [
-        'post_id',
-        'user_id',
+        'sender_id',
+        'receiver_id',
+        'status',
     ];
 
     public function user(){
-        return $this->belongsTo(User::class,'user_id','id');
+        return $this->belongsTo(User::class,'sender_id');
     }
-    public function post(){
-        return $this->belongsTo(Post::class,'post_id','id');
+    public function receiver(){
+        return $this->belongsTo(User::class,'receiver_id');
     }
 }

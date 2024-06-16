@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('friend_requests', function (Blueprint $table) {
+        Schema::create('share_posts', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id');
+            $table->integer('post_id');
+            $table->text('content');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -22,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('friend_requests');
+        Schema::dropIfExists('share_posts');
     }
 };

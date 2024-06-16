@@ -15,53 +15,32 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-     /**
- * @OA\Post(
- *     path="/api/register",
- *     summary="Register a new user",
- *     description="Register a new user and return the access token",
- *     tags={"Auth"},
- *     @OA\RequestBody(
- *         @OA\JsonContent(
- *             required={"name", "email", "password"},
- *             @OA\Property(property="name", type="string"),
- *             @OA\Property(property="email", type="string"),
- *             @OA\Property(property="password", type="string")
- *         )
- *     ),
- *     @OA\Parameter(
- *         name="X-CSRF-TOKEN",
- *         in="header",
- *         required=true,
- *         @OA\Schema(type="string")
- *     ),
- *     @OA\Response(
- *         response=201,
- *         description="Registration successful",
- *         @OA\JsonContent(
- *             @OA\Property(property="message", type="string"),
- *             @OA\Property(property="access_token", type="string"),
- *             @OA\Property(property="token_type", type="string")
- *         )
- *     ),
- *     @OA\Response(
- *         response=422,
- *         description="Validation error",
- *         @OA\JsonContent(
- *             @OA\Property(property="message", type="string", example="The given data was invalid."),
- *             @OA\Property(
- *                 property="errors",
- *                 type="object",
- *                 @OA\AdditionalProperties(
- *                     @OA\Property(type="array", @OA\Items(type="string"))
- *                 )
- *             )
- *         )
- *     )
- * )
- */
-
-public function register(Request $request): JsonResponse
+    //register
+    /**
+     * @OA\Post(
+     *     path="/api/register",
+     *     tags={"Auth"},
+     *     summary="Register a new user",
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="email", type="string"),
+     *             @OA\Property(property="password", type="string"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="accessToken", type="string")
+     *         )
+     *     )
+     * )
+     */
+    public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -90,7 +69,8 @@ public function register(Request $request): JsonResponse
         ], 201);
     }
 
- /**
+ //login
+/**
      * @OA\Post(
      *     path="/api/login",
      *     tags={"Auth"},
@@ -148,22 +128,31 @@ public function register(Request $request): JsonResponse
             'token_type' => 'Bearer'
         ]);
     }
- /**
-     * @OA\Post(
-     *     path="/api/logout",
-     *     tags={"Auth"},
-     *     summary="Logout the authenticated user",
-     *     security={{"sanctum": {}}},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful response",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="message", type="string")
-     *         )
-     *     )
-     * )
-     */
+/**
+ * @OA\Post(
+ *     path="/api/logout",
+ *     tags={"Auth"},
+ *     summary="Logout the authenticated user",
+ *     security={{"sanctum": {}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successful response",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="success", type="boolean"),
+ *             @OA\Property(property="message", type="string")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Invalid token or token expired",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="message", type="string")
+ *         )
+ *     )
+ * )
+ */
     public function logout(Request $request): JsonResponse
     {
         $user = Auth::guard('sanctum')->user();
@@ -199,8 +188,41 @@ public function register(Request $request): JsonResponse
             ],
         ]);
     }
-
-
+/**
+ * @OA\Post(
+ *     path="/api/forgot/password",
+ *     summary="Request password reset",
+ *     description="Sends a password reset link to the user's email.",
+ *     operationId="forgotPassword",
+ *     tags={"Auth"},
+ *     @OA\RequestBody(
+ *         @OA\JsonContent(
+ *             @OA\Property(property="email", type="string")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Password reset link sent to your email",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="User not found",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Validation error",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="errors", type="object")
+ *         )
+ *     )
+ * )
+ */
     public function forgotPassword(Request $request): JsonResponse
     {
         // Validate the incoming request
@@ -232,6 +254,56 @@ public function register(Request $request): JsonResponse
         return response()->json(['message' => 'Password reset link sent to your email']);
     }
 
+    /**
+ * @OA\Post(
+ *     path="/api/reset/password",
+ *     summary="Reset user password",
+ *     description="Resets the user's password using a valid token.",
+ *     operationId="resetPassword",
+ *     tags={"Auth"},
+ *     @OA\RequestBody(
+ *         @OA\JsonContent(
+ *             required={"email", "token", "password"},
+ *             @OA\Property(property="email", type="string"),
+ *             @OA\Property(property="token", type="string"),
+ *             @OA\Property(property="password", type="string"),
+ *             @OA\Property(property="password_confirmation", type="string")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Password reset successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Invalid or expired token",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="User not found",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Validation error",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="errors", type="object", example={
+ *                 "email": {"The email field is required."},
+ *                 "token": {"The token field is required."},
+ *                 "password": {"The password field is required."}
+ *             })
+ *         )
+ *     )
+ * )
+ */
     public function resetPassword(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -266,5 +338,4 @@ public function register(Request $request): JsonResponse
 
         return response()->json(['message' => 'Password reset successfully']);
     }
-    
 }

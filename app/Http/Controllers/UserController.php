@@ -4,18 +4,21 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Resources\ImageResource;
+use App\Http\Resources\ViewProfileResource;
 use App\Models\Media;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use User;
+
+
 
 
 class UserController extends Controller
 {
+
+    // ===========display profile for user after login===========
     public function me(Request $request): JsonResponse
     {
         return response()->json([
@@ -23,21 +26,56 @@ class UserController extends Controller
             'data'  => $request->user(),
         ]);
     }
-    public function updateProfilePicture(Request $request)
+
+    //===========view profile for user after login===========
+    public function myProfile(Request $request)
+{
+    $userInformation = $request->user();
+    $userInformation = new ViewProfileResource($userInformation);
+    return response()->json([
+        'data' => $userInformation,
+    ]);
+}
+
+//===========update profile picture for user after login===========
+public function uploadProfilePicture(Request $request)
     {
-        $user = Auth::user();  // Get the authenticated user
-    
-        $validatedData = $request->validate([
-            'media_id' => 'required|integer',
+        $validateUser = Validator::make($request->all(), [
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
-    
-        // Update the user's media_id
-        $user->media_id = $validatedData['media_id'];
-        $user->save();
-        $user=new ImageResource($user);
-        return response()->json(['success' => true,'message'=>'Update Profile Picture Successfully!'], 200);
+        if ($validateUser->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'validation error',
+                'errors' => $validateUser->errors()
+            ], 422);
+        }
+        $img = $request->image;
+        $ext = $img->getClientOriginalExtension();
+        $imageName = time() . '.' . $ext;
+        $img->move(public_path() . '/uploads/', $imageName);
+
+        try {
+            $user = $request->user()->id;
+            $user->update([
+                'image' => $imageName
+            ]);
+            return response()->json([
+                'success' => true,
+                'data' => $user,
+                'message' => 'Profile updated successfully'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 404);
+        }
     }
 
+
+
+//===========update profile  for user after login===========
     public function updateProfile(Request $request){
         $user = Auth::user();         
         if($request->has('name')) {
